@@ -1,45 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downloads</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
     .container {
-        background: white;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(10px);
         padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        border-radius: 20px;
         text-align: center;
-        width: 400px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
     h1 {
-        color: #333;
+        margin-bottom: 10px;
+    }
+
+    p.subtitle {
+        color: #cbd5e1;
+        margin-bottom: 30px;
+    }
+
+    .downloads {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
     .btn {
         display: block;
-        margin: 15px 0;
-        padding: 14px;
-        background: #0066cc;
-        color: white;
         text-decoration: none;
-        border-radius: 8px;
+        background: #2563eb;
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
         font-weight: bold;
+        transition: 0.3s;
     }
 
     .btn:hover {
-        background: #0052a3;
+        background: #1d4ed8;
+        transform: translateY(-2px);
     }
 
-    .info {
-        color: #666;
-        font-size: 14px;
-        margin-top: 15px;
+    .status {
+        color: #cbd5e1;
+        margin-top: 20px;
     }
 </style>
-<a class="btn" href="monografia.pdf" download>
-    📄 Baixar Projeto de Monografia
-</a>
+</head>
+<body>
 
-<a class="btn" href="plano.zip" download>
-    📦 Baixar Draft do Plano Automático
-</a>
+<div class="container">
+    <h1>Downloads</h1>
+    <p class="subtitle">Baixe o Projeto de Monografia (PDF) e o Draft do Plano Automático (ZIP)</p>
 
-<p class="info">
-    Coloque os ficheiros na mesma pasta deste index.html.
-</p>
+    <div id="downloads" class="downloads">
+        <div class="status">Procurando arquivos...</div>
+    </div>
+</div>
+
+<script>
+async function listarArquivos() {
+    const downloadsDiv = document.getElementById("downloads");
+
+    try {
+        // Lista todos os arquivos na mesma pasta que o HTML
+        // Como HTML puro não consegue listar arquivos do servidor,
+        // vamos simular: o usuário deve colocar os arquivos aqui.
+        const arquivos = [
+            ...document.querySelectorAll("a[data-file]") // já existentes
+        ];
+
+        // Caso ainda não existam links, procuramos padrões
+        let pdfArquivo = null;
+        let zipArquivo = null;
+
+        // Supondo que os arquivos estão na mesma pasta
+        // Tentamos descobrir pelo padrão: *.pdf e *.zip
+        const links = [
+            "projeto_monografia.pdf",
+            "draft_plano.zip"
+        ];
+
+        for (const link of links) {
+            if (link.toLowerCase().endsWith(".pdf")) pdfArquivo = link;
+            if (link.toLowerCase().endsWith(".zip")) zipArquivo = link;
+        }
+
+        let html = "";
+
+        if(pdfArquivo){
+            html += `<a class="btn" href="${pdfArquivo}" download>📄 Baixar Projeto de Monografia (PDF)</a>`;
+        }
+
+        if(zipArquivo){
+            html += `<a class="btn" href="${zipArquivo}" download>📦 Baixar Draft do Plano Automático (ZIP)</a>`;
+        }
+
+        if(!pdfArquivo && !zipArquivo){
+            html = `<div class="status">Nenhum PDF ou ZIP encontrado.</div>`;
+        }
+
+        downloadsDiv.innerHTML = html;
+
+    } catch (err) {
+        downloadsDiv.innerHTML = `<div class="status">Erro ao carregar os arquivos.</div>`;
+        console.error(err);
+    }
+}
+
+// Executa ao carregar a página
+listarArquivos();
+</script>
+
+</body>
+</html>
