@@ -76,53 +76,24 @@
 </div>
 
 <script>
-async function listarArquivos() {
+function listarArquivos() {
     const downloadsDiv = document.getElementById("downloads");
 
-    try {
-        // Lista todos os arquivos na mesma pasta que o HTML
-        // Como HTML puro não consegue listar arquivos do servidor,
-        // vamos simular: o usuário deve colocar os arquivos aqui.
-        const arquivos = [
-            ...document.querySelectorAll("a[data-file]") // já existentes
-        ];
+    // Nomes reais dos arquivos na pasta
+    const pdfArquivo = "Projecto de monografia Luis.pdf";
+    const zipArquivo = "Aplicacao web Plano Automatico-Projecto inicial.zip";
 
-        // Caso ainda não existam links, procuramos padrões
-        let pdfArquivo = null;
-        let zipArquivo = null;
+    // Cria os botões de download
+    let html = `
+        <a class="btn" href="${encodeURIComponent(pdfArquivo)}" download>
+            📄 Baixar Projeto de Monografia
+        </a>
+        <a class="btn" href="${encodeURIComponent(zipArquivo)}" download>
+            📦 Baixar Draft do Plano Automático
+        </a>
+    `;
 
-        // Supondo que os arquivos estão na mesma pasta
-        // Tentamos descobrir pelo padrão: *.pdf e *.zip
-        const links = [
-            "projeto_monografia.pdf",
-            "draft_plano.zip"
-        ];
-
-        for (const link of links) {
-            if (link.toLowerCase().endsWith(".pdf")) pdfArquivo = link;
-            if (link.toLowerCase().endsWith(".zip")) zipArquivo = link;
-        }
-
-        let html = "";
-
-        if(pdfArquivo){
-            html += `<a class="btn" href="${pdfArquivo}" download>📄 Baixar Projeto de Monografia (PDF)</a>`;
-        }
-
-        if(zipArquivo){
-            html += `<a class="btn" href="${zipArquivo}" download>📦 Baixar Draft do Plano Automático (ZIP)</a>`;
-        }
-
-        if(!pdfArquivo && !zipArquivo){
-            html = `<div class="status">Nenhum PDF ou ZIP encontrado.</div>`;
-        }
-
-        downloadsDiv.innerHTML = html;
-
-    } catch (err) {
-        downloadsDiv.innerHTML = `<div class="status">Erro ao carregar os arquivos.</div>`;
-        console.error(err);
-    }
+    downloadsDiv.innerHTML = html;
 }
 
 // Executa ao carregar a página
